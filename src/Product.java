@@ -1,9 +1,15 @@
-public abstract   class  Product {
+public abstract class Product {
 
-    private String productID;
+    private String productID = "Generic";
     private String productName;
     private int noOfAvailableItems;
     private double price;
+
+    public Product(String productID, String productName) {
+        this.productID = productID;
+        this.productName = productName;
+
+    }
 
     public Product(String productID, String productName, int noOfAvailableItems, double price) {
         this.productID = productID;
@@ -35,6 +41,18 @@ public abstract   class  Product {
 
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product ID: " + productID +
+                "\nProduct Name: " + productName +
+                "\nNo of Available Items: " + noOfAvailableItems +
+                "\nPrice: " + price;
     }
 
 }
