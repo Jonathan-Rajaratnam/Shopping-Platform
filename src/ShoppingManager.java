@@ -1,8 +1,8 @@
 public interface ShoppingManager {
 
-    public abstract void addProduct(Product product);
+    public abstract void addProduct();
 
-    public abstract void removeProduct(String productID);
+    public abstract void removeProduct();
 
     public abstract void printProductList();
 

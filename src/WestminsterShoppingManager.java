@@ -4,22 +4,88 @@ import java.util.Scanner;
 
 public class WestminsterShoppingManager implements ShoppingManager {
 
-    ArrayList<Product> productList = new ArrayList<Product>();
+    int maxNoOfProducts = 50;
+
+    ArrayList<Product> productList = new ArrayList<>();
 
     public WestminsterShoppingManager() {
     }
 
-    ;
-
     @Override
-    public void addProduct(Product product) {
+    public void addProduct() {
+        Scanner input = new Scanner(System.in);
+
+        boolean isTrue = true;
+        int userInput = 0;
+        while (isTrue) {
+            try {
+                System.out.print("Select product Category: 1. Electronics 2. Clothes: ");
+                System.out.flush();
+                userInput = input.nextInt();
+                if (userInput == 1 || userInput == 2) {
+                    isTrue = false;
+                } else {
+
+                    System.err.println("Invalid choice");
+                    System.err.flush();
+                    //System.out.println();
+                }
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid choice");
+                System.err.flush();
+                input.next();
+            }
+
+        }
+        input.nextLine();
+        System.out.println("Enter Product ID: ");
+        String productID = input.nextLine();
+        System.out.println("Enter Product Name: ");
+        String productName = input.nextLine();
+        System.out.println("Enter Product Price: ");
+        double productPrice = input.nextDouble();
+        System.out.println("Enter Number of Available Items: ");
+        int noOfAvailableItems = input.nextInt();
+        if (userInput == 1) {
+            System.out.println("Enter Brand: ");
+            String brand = input.nextLine();
+            System.out.println("Enter Warranty Period: ");
+            String warrantyPeriod = input.next();
+            Electronics e = new Electronics(productID, productName, noOfAvailableItems, productPrice, brand, warrantyPeriod);
+            productList.add(e);
+        } else {
+            System.out.println("Enter Size: ");
+            String size = input.nextLine();
+            System.out.println("Enter Material: ");
+            String material = input.nextLine();
+            Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, material);
+            productList.add(c);
+        }
 
 
     }
 
     @Override
-    public void removeProduct(String productID) {
-        productList.removeIf(p -> p.getProductID().equals(productID));
+    public void removeProduct() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter Product ID: ");
+        String productID = input.nextLine();
+        for (Product p : productList) {
+            if (p.getProductID().equals(productID)) {
+                productList.remove(p);
+                //print the product that was removed with the type of product
+                if (p instanceof Electronics) {
+                    System.out.println("Product removed: Type: Electronics" + p.toString());
+                } else {
+                    System.out.println("Product removed: Type: Clothing " + p.toString());
+                }
+                break;
+            } else {
+                System.out.println("Product not found");
+            }
+        }
+
+        //productList.removeIf(p -> p.getProductID().equals(productID));
 
 
     }
@@ -34,9 +100,16 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void saveProductList() {
+        //TODO: save the product list to a file
+
 
     }
 
+    /**
+     * TODO: load the product list from a file
+     * This method should be called when the program starts
+     * and the product list should be loaded from the file
+     */
     @Override
     public void loadProductList() {
 
@@ -60,56 +133,16 @@ public class WestminsterShoppingManager implements ShoppingManager {
         switch (choice) {
 
             case "1":
-                boolean isTrue = true;
-                int userInput = 0;
-                while (isTrue) {
-                    try {
-                        System.out.print("Select product Category: 1. Electronics 2. Clothes: ");
-                        userInput = input.nextInt();
-                        if (userInput == 1 || userInput == 2) {
-                            isTrue = false;
-                        } else {
-
-                            System.err.println("Invalid choice");
-                            //System.out.println();
-                        }
-                    } catch (InputMismatchException e) {
-                        System.err.println("Invalid choice");
-                        input.next();
-                    }
-
-                }
-                input.nextLine();
-                System.out.println("Enter Product ID: ");
-                String productID = input.nextLine();
-                System.out.println("Enter Product Name: ");
-                String productName = input.nextLine();
-                System.out.println("Enter Product Price: ");
-                double productPrice = input.nextDouble();
-                System.out.println("Enter Number of Available Items: ");
-                int noOfAvailableItems = input.nextInt();
-                if (userInput == 1) {
-                    System.out.println("Enter Brand: ");
-                    String brand = input.nextLine();
-                    System.out.println("Enter Warranty Period: ");
-                    String warrantyPeriod = input.next();
-                    Electronics e = new Electronics(productID, productName, noOfAvailableItems, productPrice, brand, warrantyPeriod);
+                if (productList.size() == maxNoOfProducts) {
+                    System.out.println("Product List is full");
+                    System.out.println("Please delete a product to add a new product");
                 } else {
-                    System.out.println("Enter Size: ");
-                    String size = input.nextLine();
-                    System.out.println("Enter Material: ");
-                    String material = input.nextLine();
-                    Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, material);
+                    addProduct();
                 }
-
-                //Product p = new Product(productID, productName, productPrice);
-                //productList.add(p);
                 menu();
                 break;
             case "2":
-                System.out.println("Enter Product ID: ");
-                String productID2 = input.nextLine();
-                removeProduct(productID2);
+                removeProduct();
                 menu();
                 break;
             case "3":
