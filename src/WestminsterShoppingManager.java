@@ -1,3 +1,5 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -14,50 +16,61 @@ public class WestminsterShoppingManager implements ShoppingManager {
     @Override
     public void addProduct() {
         Scanner input = new Scanner(System.in);
+        DateTime dt = new DateTime();
+        String warrantyPeriod;
+        String brand;
 
         boolean isTrue = true;
         int userInput = 0;
         while (isTrue) {
             try {
                 System.out.print("Select product Category: 1. Electronics 2. Clothes: ");
-                System.out.flush();
+                //System.out.flush();
                 userInput = input.nextInt();
                 if (userInput == 1 || userInput == 2) {
                     isTrue = false;
                 } else {
 
-                    System.err.println("Invalid choice");
-                    System.err.flush();
+                    System.out.println("Invalid choice");
                     //System.out.println();
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Invalid choice");
-                System.err.flush();
-                input.next();
+                System.out.println("Invalid choice");
             }
 
         }
-        input.nextLine();
-        System.out.println("Enter Product ID: ");
-        String productID = input.nextLine();
-        System.out.println("Enter Product Name: ");
-        String productName = input.nextLine();
-        System.out.println("Enter Product Price: ");
+        //input.next();
+        System.out.print("\nEnter Product ID: ");
+        String productID = input.next();
+        System.out.print("\nEnter Product Name: ");
+        String productName = input.next();
+        System.out.print("\nEnter Product Price: ");
+        while (!input.hasNextDouble()) {
+            System.out.println("Invalid input");
+            System.out.print("\nEnter Product Price: ");
+            input.next();
+        }
         double productPrice = input.nextDouble();
-        System.out.println("Enter Number of Available Items: ");
+        System.out.print("\nEnter Number of Available Items: ");
         int noOfAvailableItems = input.nextInt();
         if (userInput == 1) {
-            System.out.println("Enter Brand: ");
-            String brand = input.nextLine();
-            System.out.println("Enter Warranty Period: ");
-            String warrantyPeriod = input.next();
+            System.out.print("\nEnter Brand: ");
+            brand = input.next();
+            while (true) {
+                System.out.print("\nEnter Warranty Period: ");
+                warrantyPeriod = input.next();
+                if (!dt.isValidDate(warrantyPeriod)) {
+                    System.out.println("Invalid date");
+                } else break;
+            }
+
             Electronics e = new Electronics(productID, productName, noOfAvailableItems, productPrice, brand, warrantyPeriod);
             productList.add(e);
         } else {
-            System.out.println("Enter Size: ");
-            String size = input.nextLine();
-            System.out.println("Enter Material: ");
-            String material = input.nextLine();
+            System.out.print("\nEnter Size: ");
+            String size = input.next();
+            System.out.print("\nEnter Material: ");
+            String material = input.next();
             Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, material);
             productList.add(c);
         }
@@ -75,9 +88,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 productList.remove(p);
                 //print the product that was removed with the type of product
                 if (p instanceof Electronics) {
-                    System.out.println("Product removed: Type: Electronics" + p.toString());
+                    System.out.println("Product removed: Type: Electronics" + p);
                 } else {
-                    System.out.println("Product removed: Type: Clothing " + p.toString());
+                    System.out.println("Product removed: Type: Clothing " + p);
                 }
                 break;
             } else {
@@ -100,10 +113,20 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void saveProductList() {
-        //TODO: save the product list to a file
+        try {
+            FileOutputStream fos = new FileOutputStream("productList.txt");
+            for (Product p : productList) {
+                String product = p.toString();
+                byte[] b = product.getBytes();
+                fos.write(b);
+            }
 
-
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error");
+        }
     }
+
 
     /**
      * TODO: load the product list from a file

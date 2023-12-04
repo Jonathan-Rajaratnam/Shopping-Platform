@@ -4,11 +4,11 @@ public class ShoppingCart {
 
     ArrayList<Product> cart = new ArrayList<>();
 
-    public void addProduct(Product p) {
+    public void addToCart(Product p) {
         cart.add(p);
     }
 
-    public void removeProduct(Product p) {
+    public void removeFromCart(Product p) {
         cart.remove(p);
     }
 
