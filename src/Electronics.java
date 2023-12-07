@@ -1,13 +1,16 @@
-public class Electronics extends Product {
+import java.io.Serializable;
+
+public class Electronics extends Product implements Serializable {
 
     private String brand;
+    //Assumption is made as the warranty period is given in weeks
     private String warrantyPeriod;
 
 
-    public Electronics(String productID, String productName, int noOfAvailableItems, double price, String brand, String warrantyPeriod) {
+    public Electronics(String productID, String productName, int noOfAvailableItems, double price, String brand, int warrantyPeriod) {
         super(productID, productName, noOfAvailableItems, price);
         this.brand = brand;
-        this.warrantyPeriod = warrantyPeriod;
+        this.warrantyPeriod = warrantyPeriod + " weeks";
     }
 
     /**
@@ -48,7 +51,8 @@ public class Electronics extends Product {
 
     @Override
     public String toString() {
-        return super.toString() +
+        return "Type: Electronics \n" +
+                super.toString() +
                 "\nBrand: " + brand +
                 "\nWarranty Period: " + warrantyPeriod;
     }

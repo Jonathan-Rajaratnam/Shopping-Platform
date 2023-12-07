@@ -1,9 +1,12 @@
-public abstract class Product {
+import java.io.Serializable;
+
+public abstract class Product implements Serializable {
 
     private String productID = "Generic";
     private String productName;
     private int noOfAvailableItems;
     private double price;
+
 
     public Product(String productID, String productName) {
         this.productID = productID;
