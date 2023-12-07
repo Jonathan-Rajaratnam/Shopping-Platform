@@ -1,4 +1,6 @@
-public class Clothing extends Product {
+import java.io.Serializable;
+
+public class Clothing extends Product implements Serializable {
 
     private String size;
     private String color;
@@ -32,7 +34,8 @@ public class Clothing extends Product {
 
     @Override
     public String toString() {
-        return super.toString() +
+        return "Type: Clothing \n" +
+                super.toString() +
                 "\nSize: '" + size +
                 ", \nColor: '" + color;
     }
