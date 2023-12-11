@@ -40,14 +40,18 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
         }
         //input.next();
+        //Check if the product entered already exits in the array
         do {
             System.out.print("\nEnter Product ID: ");
             productID = input.next();
         } while (checkProductID(productID));
 
+        //Get other info for the product
         System.out.print("\nEnter Product Name: ");
         String productName = input.next();
         System.out.print("\nEnter Product Price: ");
+
+        //Check if the price input is a valid double/int
         while (!input.hasNextDouble()) {
             System.out.println("Invalid input");
             System.out.print("\nEnter Product Price: ");
@@ -56,6 +60,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
         double productPrice = input.nextDouble();
         System.out.print("\nEnter Number of Available Items: ");
         int noOfAvailableItems = input.nextInt();
+
+        //If user selected Electronics as the product
         if (userInput == 1) {
             System.out.print("\nEnter Brand: ");
             brand = input.next();
@@ -78,6 +84,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
 //            }
             Electronics e = new Electronics(productID, productName, noOfAvailableItems, productPrice, brand, warrantyPeriod);
             productList.add(e);
+
+            // If user selected Clothing as the product
         } else {
             System.out.print("\nEnter Size: ");
             String size = input.next();
@@ -90,6 +98,12 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     }
 
+    /**
+     * This method checks if the product ID entered by the user already exists in the array
+     *
+     * @param productID The product ID entered by the user
+     * @return true if the product ID already exists in the array, false if it doesn't
+     */
     public boolean checkProductID(String productID) {
         boolean isPresent = false;
         for (Product p : productList) {
@@ -103,6 +117,13 @@ public class WestminsterShoppingManager implements ShoppingManager {
         return isPresent;
     }
 
+    public ArrayList<Product> getProductList() {
+        return productList;
+    }
+
+    /**
+     * This method removes a product from the system based on the product ID entered by the user
+     */
     @Override
     public void removeProduct() {
         Scanner input = new Scanner(System.in);
@@ -111,7 +132,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         for (Product p : productList) {
             if (p.getProductID().equals(productID)) {
                 productList.remove(p);
-                //print the product that was removed with the type of product
+                //Print the product that was removed with the type of product
                 if (p instanceof Electronics) {
                     System.out.println("Product removed: Type: Electronics" + p);
                 } else {
@@ -129,15 +150,22 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     }
 
+    /**
+     * This method prints the product list in alphabetical order of product ID
+     */
     @Override
     public void printProductList() {
         for (Product p : productList) {
             System.out.println(p.toString() + "\n");
         }
-
     }
 
 
+    /**
+     * This method should be called when the program is exiting
+     * and the product list should be saved to the file
+     * This uses the java serialization API tp write and read objects to and from a file
+     */
     @Override
     public void saveProductList() {
         try {
@@ -153,8 +181,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
 
     /**
-     * This method should be called when the program starts
-     * and the product list should be loaded from the file
+     * This method should be called at the start each time the program starts
+     * and the product list should be loaded from the file into the array
      */
     @Override
     public void loadProductList() {
@@ -176,8 +204,11 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-
-    public void menu() throws FileNotFoundException {
+    /**
+     * This method displays the menu to the user and calls the appropriate method based on the
+     * user's choice
+     */
+    public void menu() {
         Scanner input = new Scanner(System.in);
         //Scanner input2 = new Scanner(System.in);
         System.out.println("\n1. Add Product");
@@ -195,6 +226,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         switch (choice) {
 
             case "1":
+                //Performs a check to see ff the maximum number of products which is 50 has been reached
                 if (productList.size() == maxNoOfProducts) {
                     System.out.println("Product List is full");
                     System.out.println("Please delete a product to add a new product");
@@ -220,8 +252,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 menu();
                 break;
             case "6":
-                GUI gui = new GUI();
-                gui.screen();
+//                GUI2 gui = new GUI2();
+//                gui.main(null);
                 break;
             case "7":
                 System.exit(0);
