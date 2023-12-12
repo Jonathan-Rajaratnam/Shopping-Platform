@@ -5,9 +5,8 @@ import java.util.Scanner;
 
 public class WestminsterShoppingManager implements ShoppingManager {
 
+    static ArrayList<Product> productList = new ArrayList<>();
     int maxNoOfProducts = 50;
-
-    ArrayList<Product> productList = new ArrayList<>();
 
     public WestminsterShoppingManager() {
     }
@@ -118,6 +117,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
     public ArrayList<Product> getProductList() {
+        for (Product p : productList) {
+            System.out.println(p.toString());
+        }
         return productList;
     }
 
@@ -252,8 +254,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 menu();
                 break;
             case "6":
-//                GUI2 gui = new GUI2();
-//                gui.main(null);
+                GUI2 gui = new GUI2();
+                gui.main(null);
                 break;
             case "7":
                 System.exit(0);

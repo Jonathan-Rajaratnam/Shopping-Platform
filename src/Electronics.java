@@ -1,6 +1,11 @@
+import java.io.Serial;
 import java.io.Serializable;
 
 public class Electronics extends Product implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -1844162502314195720L;
+
 
     private String brand;
     //Assumption is made as the warranty period is given in weeks
