@@ -5,10 +5,15 @@ import java.util.Scanner;
 
 public class WestminsterShoppingManager implements ShoppingManager {
 
-    static ArrayList<Product> productList = new ArrayList<>();
+    public static ArrayList<Product> productList = new ArrayList<>();
+    private static WestminsterShoppingManager instance;
     int maxNoOfProducts = 50;
 
-    public WestminsterShoppingManager() {
+    public static synchronized WestminsterShoppingManager getInstance() {
+        if (instance == null) {
+            instance = new WestminsterShoppingManager();
+        }
+        return instance;
     }
 
     @Override
@@ -162,7 +167,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-
     /**
      * This method should be called when the program is exiting
      * and the product list should be saved to the file
@@ -177,7 +181,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println("\nProduct list saved");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -202,9 +206,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
+
 
     /**
      * This method displays the menu to the user and calls the appropriate method based on the
@@ -254,8 +259,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 menu();
                 break;
             case "6":
-                GUI2 gui = new GUI2();
-                gui.main(null);
+//                GUI2 gui = new GUI2();
+//                gui.mainFrame();
+                System.out.println("Instance of WSM is " + instance);
+                GUI2 gui = GUI2.getInstance();
                 break;
             case "7":
                 System.exit(0);

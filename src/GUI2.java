@@ -8,9 +8,8 @@ import java.util.ArrayList;
 
 public class GUI2 extends JFrame {
 
+    private static GUI2 instance;
     ArrayList<Product> productList = new ArrayList<>();
-
-
     JPanel productPanel = new JPanel();
     JPanel productListingPanel = new JPanel();
     JPanel productInfoPanel = new JPanel();
@@ -22,6 +21,28 @@ public class GUI2 extends JFrame {
     String type = "All";
 
     private Product product = null;
+
+    private GUI2() {
+        JFrame frame = new JFrame("WestMinster Shopping Center");
+        frame.setSize(620, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //productListPanel.setBackground(Color.lightGray);
+
+        // Add the panels to the frame
+        frame.add(productPanelDes(), BorderLayout.NORTH);
+        frame.add(productListingPanel, BorderLayout.CENTER);
+        //frame.pack();
+        frame.setVisible(true);
+
+    }
+
+    public static GUI2 getInstance() {
+        if (instance == null) {
+            instance = new GUI2();
+        }
+        return instance;
+    }
 
     /**
      * This creates a JScrollPane that wil contain the table of products
@@ -252,6 +273,8 @@ public class GUI2 extends JFrame {
         //wsm2.loadProductList();
 
         //Initialize the productList array from WestminsterShoppingManager
+        //print Instance of wsm
+        //System.out.println("Instance of wsm: " + wsm);
         productList = WestminsterShoppingManager.productList;
         System.out.println("Product list size: " + productList.size());
 
@@ -344,20 +367,20 @@ public class GUI2 extends JFrame {
     /**
      * This method creates the main frame of the GUI
      */
-    public void mainFrame() {
-        JFrame frame = new JFrame("WestMinster Shopping Center");
-        frame.setSize(620, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //productListPanel.setBackground(Color.lightGray);
-
-        // Add the panels to the frame
-        frame.add(productPanelDes(), BorderLayout.NORTH);
-        frame.add(productListingPanel, BorderLayout.CENTER);
-        //frame.pack();
-        frame.setVisible(true);
-
-    }
+//    public void mainFrame() {
+//        JFrame frame = new JFrame("WestMinster Shopping Center");
+//        frame.setSize(620, 600);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        //productListPanel.setBackground(Color.lightGray);
+//
+//        // Add the panels to the frame
+//        frame.add(productPanelDes(), BorderLayout.NORTH);
+//        frame.add(productListingPanel, BorderLayout.CENTER);
+//        //frame.pack();
+//        frame.setVisible(true);
+//
+//    }
 
     /**
      * This method adds an event listener to the dropdown menu

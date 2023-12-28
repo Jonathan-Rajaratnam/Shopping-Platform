@@ -13,7 +13,6 @@ public class CartGUI extends JFrame {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setSize(500, 500);
         setVisible(true);
-
     }
 
     public static CartGUI getInstance() {
