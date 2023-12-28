@@ -42,6 +42,7 @@ public class GUI2 extends JFrame {
             }
         };
 
+        //DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         productTable.setModel(tableModel);
 
         productTable.getSelectedRow();
@@ -114,34 +115,30 @@ public class GUI2 extends JFrame {
 
         for (Product p : productList) {
             if (p.getProductID().equals(productID)) {
-                if (p.getNoOfAvailableItems() < 3) {
-                    if (p instanceof Electronics) {
-
-
+                if (p instanceof Electronics) {
 //                    productInfo = new JTextArea("\nProduct ID: " + productID +
 //                            "\n\nCategory: " + "Electronics" +
 //                            "\n\nBrand: " + ((Electronics) p).getBrand() +
 //                            "\n\nName: " + p.getProductName() +
 //                            "\n\nWarranty: " + ((Electronics) p).getWarrantyPeriod() +
 //                            "\n\nItems Available: " + p.getNoOfAvailableItems())
-                        productIDLabel = new JLabel("Product ID: " + productID);
-                        categoryLabel = new JLabel("Category: " + "Electronics");
-                        brandLabel = new JLabel("Brand: " + ((Electronics) p).getBrand());
-                        nameLabel = new JLabel("Name: " + p.getProductName());
-                        warrantyLabel = new JLabel("Warranty: " + ((Electronics) p).getWarrantyPeriod());
-                        itemsAvailableLabel = new JLabel("Items Available: " + p.getNoOfAvailableItems());
-                        flagElectronics = true;
+                    productIDLabel = new JLabel("Product ID: " + productID);
+                    categoryLabel = new JLabel("Category: " + "Electronics");
+                    brandLabel = new JLabel("Brand: " + ((Electronics) p).getBrand());
+                    nameLabel = new JLabel("Name: " + p.getProductName());
+                    warrantyLabel = new JLabel("Warranty: " + ((Electronics) p).getWarrantyPeriod());
+                    itemsAvailableLabel = new JLabel("Items Available: " + p.getNoOfAvailableItems());
+                    flagElectronics = true;
 
-                    } else if (p instanceof Clothing) {
+                } else if (p instanceof Clothing) {
 
-                        productIDLabel = new JLabel("Product ID: " + productID);
-                        categoryLabel = new JLabel("Category: " + "Clothing");
-                        nameLabel = new JLabel("Name: " + p.getProductName());
-                        sizeLabel = new JLabel("Size: " + ((Clothing) p).getSize());
-                        colorLabel = new JLabel("Color: " + ((Clothing) p).getColor());
-                        itemsAvailableLabel = new JLabel("Items Available: " + p.getNoOfAvailableItems());
-                        flagCloth = true;
-
+                    productIDLabel = new JLabel("Product ID: " + productID);
+                    categoryLabel = new JLabel("Category: " + "Clothing");
+                    nameLabel = new JLabel("Name: " + p.getProductName());
+                    sizeLabel = new JLabel("Size: " + ((Clothing) p).getSize());
+                    colorLabel = new JLabel("Color: " + ((Clothing) p).getColor());
+                    itemsAvailableLabel = new JLabel("Items Available: " + p.getNoOfAvailableItems());
+                    flagCloth = true;
 //                    productInfo = new JTextArea("\n" +
 //                            "Product ID: " + productID +
 //                            "\n\nCategory: " + "Clothing" +
@@ -149,7 +146,6 @@ public class GUI2 extends JFrame {
 //                            "\n\nSize: " + ((Clothing) p).getSize() +
 //                            "\n\nColor: " + ((Clothing) p).getColor() +
 //                            "\n\nItems Available: " + p.getNoOfAvailableItems());
-                    }
                 }
             }
         }
@@ -184,15 +180,15 @@ public class GUI2 extends JFrame {
         JButton addToCartButton = new JButton("Add to Shopping Cart");
         addToCartButton.addActionListener(new addToCartListener());
 
-        JPanel productInfoPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        productInfoPanelWrapper.add(productInfoPanel);
+//        JPanel productInfoPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//        productInfoPanelWrapper.add(productInfoPanel);
 
         productInfoPanel.setLayout(new BoxLayout(productInfoPanel, BoxLayout.Y_AXIS));
 
 
         addToCartPanel.add(addToCartButton);
         productInfoPanel.add(addToCartPanel);
-        productListingPanel.add(productInfoPanelWrapper);
+        productListingPanel.add(productInfoPanel);
         productListingPanel.revalidate();
         productListingPanel.repaint();
 
@@ -396,10 +392,8 @@ public class GUI2 extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("Shopping cart button clicked");
-            JFrame shoppingCartFrame = new JFrame("Shopping Cart");
-            shoppingCartFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            shoppingCartFrame.setSize(600, 700);
-            shoppingCartFrame.setVisible(true);
+            CartGUI cartGUI = CartGUI.getInstance();
+            cartGUI.setVisible(true);
 
         }
     }
@@ -409,6 +403,8 @@ public class GUI2 extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("Add to cart button clicked");
             System.out.println("Selected product: " + product);
+            ShoppingCart cart = new ShoppingCart();
+            cart.addToCart(product);
 
             //TODO: Add the selected product to the shopping cart
 
