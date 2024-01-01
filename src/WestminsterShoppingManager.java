@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -20,7 +21,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     public void addProduct() {
         Scanner input = new Scanner(System.in);
         String productID;
-        DateTime dt = new DateTime();
         int warrantyPeriod;
         String brand;
 
@@ -34,14 +34,13 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 if (userInput == 1 || userInput == 2) {
                     isTrue = false;
                 } else {
-
-                    System.out.println("Invalid choice");
+                    System.out.println("Invalid choice. Enter 1 or 2");
                     //System.out.println();
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid choice");
+                System.out.println("Invalid Input. Try again with a Number. ");
+                input.next();
             }
-
         }
         //input.next();
         //Check if the product entered already exits in the array
@@ -53,17 +52,28 @@ public class WestminsterShoppingManager implements ShoppingManager {
         //Get other info for the product
         System.out.print("\nEnter Product Name: ");
         String productName = input.next();
-        System.out.print("\nEnter Product Price: ");
+        input.nextLine();
 
-        //Check if the price input is a valid double/int
-        while (!input.hasNextDouble()) {
-            System.out.println("Invalid input");
+        System.out.print("\nEnter Product Price: ");
+        //Check if the price input is a valid double
+        do {
+            input.nextLine();
+            System.out.println("Invalid input. Enter a price.");
             System.out.print("\nEnter Product Price: ");
-            input.next();
-        }
+        } while (!input.hasNextDouble());
+
         double productPrice = input.nextDouble();
+        input.nextLine();
+
+
         System.out.print("\nEnter Number of Available Items: ");
+        do {
+            input.nextLine();
+            System.out.println("Invalid Input. Enter a number.");
+            System.out.print("\nEnter Number of Available Items: ");
+        } while (!input.hasNextInt());
         int noOfAvailableItems = input.nextInt();
+        input.nextLine();
 
         //If user selected Electronics as the product
         if (userInput == 1) {
@@ -93,9 +103,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
         } else {
             System.out.print("\nEnter Size: ");
             String size = input.next();
-            System.out.print("\nEnter Material: ");
-            String material = input.next();
-            Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, material);
+            System.out.print("\nEnter Colour: ");
+            String colour = input.next();
+            Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, colour);
             productList.add(c);
         }
 
@@ -151,17 +161,17 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 System.out.println("Product not found");
             }
         }
-
         //productList.removeIf(p -> p.getProductID().equals(productID));
-
-
     }
 
     /**
-     * This method prints the product list in alphabetical order of product ID
+     * This method sorts the product list in alphabetical order of product ID and prints the list
+     * The sorting is Done as Int and then AlphaNumeric Order.
      */
     @Override
     public void printProductList() {
+        System.out.println("\nProduct List");
+        Collections.sort(productList);
         for (Product p : productList) {
             System.out.println(p.toString() + "\n");
         }
@@ -265,6 +275,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 GUI2 gui = GUI2.getInstance();
                 break;
             case "7":
+                saveProductList();
                 System.exit(0);
                 break;
             default:
