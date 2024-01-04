@@ -1,11 +1,9 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ShoppingCart {
 
     private static ShoppingCart instance;
-    boolean sameType = false;
+
     private ArrayList<Product> products = new ArrayList<>();
 
     public ShoppingCart() {
@@ -42,16 +40,37 @@ public class ShoppingCart {
     }
 
     public double calculateTotal() {
-        double total = 0;
+        double total = 0.0;
         for (Product p : products) {
             total += p.getPrice();
         }
         return total;
     }
 
-    public boolean checkSameType() {
-        //TODO: if 3 or more products of same type is added add a 20% discount
-        return sameType;
+    /**
+     * This method checks if there are 3 or more products of the same type in the cart
+     */
+    public double checkSameType() {
+        double discount = 0.0;
+        //I have used a HashSet here instead of a HashMap since I need to only count how many distinct products
+        // of the same type are in the cart and didn't need the use of a key,val. A HashSet only allows unique values and does not allow duplicates.
+        Set<String> electronics = new HashSet<>();
+        Set<String> clothes = new HashSet<>();
+
+        for (Product p : products) {
+            if (p instanceof Electronics) {
+                electronics.add(p.getProductID());
+            } else if (p instanceof Clothing) {
+                clothes.add(p.getProductID());
+            }
+        }
+
+        if (electronics.size() >= 3 || clothes.size() >= 3) {
+            discount = calculateTotal() * 0.2;
+            System.out.println("You have 3 or more products of the same type in your cart");
+
+        }
+        return 0 - discount;
     }
 
     public ArrayList<Product> getProducts() {
