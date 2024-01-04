@@ -21,6 +21,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
     public void addProduct() {
         Scanner input = new Scanner(System.in);
         String productID;
+        double productPrice;
+        int noOfAvailableItems;
         int warrantyPeriod;
         String brand;
 
@@ -29,7 +31,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
         while (isTrue) {
             try {
                 System.out.print("Select product Category: 1. Electronics 2. Clothes: ");
-                //System.out.flush();
                 userInput = input.nextInt();
                 if (userInput == 1 || userInput == 2) {
                     isTrue = false;
@@ -39,74 +40,97 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid Input. Try again with a Number. ");
-                input.next();
+                input.nextLine();
             }
         }
-        //input.next();
+        input.nextLine();
+
         //Check if the product entered already exits in the array
-        do {
-            System.out.print("\nEnter Product ID: ");
-            productID = input.next();
-        } while (checkProductID(productID));
+        System.out.print("\nEnter Product ID: ");
+        productID = input.nextLine();
+        while (checkProductID(productID)) {
+            System.out.println("Product ID already exists. Please enter a new Product ID: ");
+            productID = input.nextLine();
+        }
 
         //Get other info for the product
         System.out.print("\nEnter Product Name: ");
-        String productName = input.next();
-        input.nextLine();
+        String productName = input.nextLine();
 
-        System.out.print("\nEnter Product Price: ");
         //Check if the price input is a valid double
-        do {
-            input.nextLine();
-            System.out.println("Invalid input. Enter a price.");
+        //Price input validation
+        while (true) {
             System.out.print("\nEnter Product Price: ");
-        } while (!input.hasNextDouble());
-
-        double productPrice = input.nextDouble();
+            try {
+                productPrice = input.nextDouble();
+                if (productPrice > 0) {
+                    break; // Exit loop if valid
+                } else {
+                    System.out.println("Price cannot be negative.");
+                    input.nextLine(); // Discard invalid input
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Input. Please enter a valid number.");
+                input.nextLine(); // Discard invalid input
+            }
+        }
         input.nextLine();
 
 
-        System.out.print("\nEnter Number of Available Items: ");
-        do {
-            input.nextLine();
-            System.out.println("Invalid Input. Enter a number.");
+        // Available items input validation
+        while (true) {
             System.out.print("\nEnter Number of Available Items: ");
-        } while (!input.hasNextInt());
-        int noOfAvailableItems = input.nextInt();
+            try {
+                noOfAvailableItems = input.nextInt();
+                if (noOfAvailableItems > 0) {
+                    break; // Exit loop if valid
+                } else {
+                    System.out.println("Number of available items cannot be negative. Enter a value greater than 0.");
+                    input.nextLine(); // Discard invalid input
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Input. Please enter a valid number.");
+                input.nextLine(); // Discard invalid input
+            }
+        }
         input.nextLine();
 
         //If user selected Electronics as the product
         if (userInput == 1) {
             System.out.print("\nEnter Brand: ");
             brand = input.next();
-            System.out.print("\nEnter Warranty Period: ");
-            while (!input.hasNextInt()) {
-                System.out.println("Invalid input");
-                System.out.print("\nEnter Warranty Period: ");
-                input.next();
+
+            // Warranty period input validation
+            while (true) {
+                System.out.print("\nEnter Warranty Period in No of weeks: ");
+                try {
+                    warrantyPeriod = input.nextInt();
+                    if (warrantyPeriod > 0) {
+                        break; // Exit loop if valid
+                    } else {
+                        System.out.println("Warranty period cannot be negative. Enter a value greater than 0.");
+                        input.nextLine(); // Discard invalid input
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid Input. Please enter a valid number.");
+                    input.nextLine(); // Discard invalid input
+                }
             }
-            warrantyPeriod = input.nextInt();
-//            while (true) {
-//                try {
-//                    System.out.print("\nEnter Warranty Period: ");
-//                    warrantyPeriod = input.nextInt();
-//                    break;
-//
-//                } catch (InputMismatchException e) {
-//                    System.out.println("Invalid input");
-//                }
-//            }
+            input.nextLine();
+
+
             Electronics e = new Electronics(productID, productName, noOfAvailableItems, productPrice, brand, warrantyPeriod);
             productList.add(e);
+            System.out.println("Product Added to System.");
 
-            // If user selected Clothing as the product
-        } else {
+        } else {  //    If user selected Clothing as the product ask for size and colour
             System.out.print("\nEnter Size: ");
             String size = input.next();
             System.out.print("\nEnter Colour: ");
             String colour = input.next();
             Clothing c = new Clothing(productID, productName, noOfAvailableItems, productPrice, size, colour);
             productList.add(c);
+            System.out.println("Product Added to System.");
         }
 
 
@@ -118,7 +142,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
      * @param productID The product ID entered by the user
      * @return true if the product ID already exists in the array, false if it doesn't
      */
-    public boolean checkProductID(String productID) {
+    private boolean checkProductID(String productID) {
         boolean isPresent = false;
         for (Product p : productList) {
             if (p.getProductID().equals(productID)) {
@@ -131,10 +155,36 @@ public class WestminsterShoppingManager implements ShoppingManager {
         return isPresent;
     }
 
-    public ArrayList<Product> getProductList() {
-        for (Product p : productList) {
-            System.out.println(p.toString());
+    private boolean validatePrice(String price) {
+        boolean isValid = false;
+        try {
+            if (Double.parseDouble(price) > 0) {
+                isValid = true;
+            } else {
+                System.out.println("Price cannot be negative.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a price.");
         }
+        return isValid;
+    }
+
+    private boolean validateNoOfAvailableItems(String noOfAvailableItems) {
+        boolean isValid = false;
+        try {
+            if (Integer.parseInt(noOfAvailableItems) > 0) {
+                isValid = true;
+            } else {
+                System.out.println("Number of available items cannot be negative. Enter a value greater than 0.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a number.");
+        }
+        return isValid;
+    }
+
+
+    public ArrayList<Product> getProductList() {
         return productList;
     }
 
@@ -269,10 +319,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 menu();
                 break;
             case "6":
-//                GUI2 gui = new GUI2();
-//                gui.mainFrame();
                 System.out.println("Instance of WSM is " + instance);
-                GUI2 gui = GUI2.getInstance();
+                GUI gui = GUI.getInstance();
                 break;
             case "7":
                 saveProductList();
