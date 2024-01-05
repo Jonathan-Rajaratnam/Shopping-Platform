@@ -24,11 +24,9 @@ public class GUI extends JFrame {
     private Product product = null;
 
     private GUI() {
-        JFrame frame = new JFrame("WestMinster Shopping Center");
-        frame.setSize(650, 500);
+        JFrame frame = new JFrame("Westminster Shopping Centre");
+        frame.setSize(750, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //productListPanel.setBackground(Color.lightGray);
 
         // Add the panels to the frame
         frame.add(productPanelDes(), BorderLayout.NORTH);
@@ -53,7 +51,7 @@ public class GUI extends JFrame {
      * @return JScrollPane which contains the table
      */
     private JScrollPane getjScrollPane(String[][] data, String[] columnNames) {
-        productTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        productTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
 
             //This method will make the cells non-editable
@@ -69,6 +67,11 @@ public class GUI extends JFrame {
 
         //Calls my custom cell render to apply the colour to cells
         CellRenderer cellRenderer = new CellRenderer();
+
+        //Set the header renderer to center align the header text
+        cellRenderer.setHeaderRenderer(productTable);
+
+
         for (int i = 0; i < productTable.getColumnCount(); i++) {
             productTable.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
         }
@@ -92,14 +95,15 @@ public class GUI extends JFrame {
                             break;
                         }
                     }
-                    productInfo(productID); //pass it to the productInfo method
+                    viewProductInfo(productID); //pass it to the productInfo method
 
-                } else {
-                    product = null;
-                    productListingPanel.removeAll();
-                    productListingPanel.revalidate();
-                    productListingPanel.repaint();
                 }
+//                else if (product == null) {
+//                    //product = null;
+//                    productListingPanel.removeAll();
+//                    productListingPanel.revalidate();
+//                    productListingPanel.repaint();
+//                }
             }
         });
 
@@ -107,13 +111,17 @@ public class GUI extends JFrame {
         JScrollPane productListScrollPane = new JScrollPane(productTable);
         productTable.setGridColor(Color.BLACK);
 
-        productTable.getColumnModel().getColumn(4).setPreferredWidth(200);
-        productListScrollPane.setPreferredSize(new Dimension(600, 100));
+        productTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+        productTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+        productTable.getColumnModel().getColumn(3).setPreferredWidth(10);
+        productTable.getColumnModel().getColumn(4).setPreferredWidth(150);
+        //productListScrollPane.setPreferredSize(productTable.getPreferredSize());
+        productListScrollPane.setPreferredSize(new Dimension(700, 100));
         return productListScrollPane;
     }
 
 
-    private void productInfo(String productID) {
+    private void viewProductInfo(String productID) {
 
         boolean flagCloth = false;
         boolean flagElectronics = false;
@@ -358,17 +366,40 @@ public class GUI extends JFrame {
 
 
     private class CellRenderer extends DefaultTableCellRenderer {
-        //@Override
+
+        DefaultTableCellRenderer renderer;
+
+        public void setHeaderRenderer(JTable table) {
+            renderer = (DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+            renderer.setHorizontalAlignment(JLabel.CENTER);
+        }
+
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             //System.out.println("does this work?");  //Yes it does
 
+            if (table.getTableHeader().getColumnModel().getColumn(column).getHeaderValue().equals(value)) {
+                ((JLabel) c).setHorizontalAlignment(JLabel.CENTER);
+            }
+
+            //This will center align the  data rows  in the Table
+            ((JLabel) c).setHorizontalAlignment(JLabel.CENTER);
+
+
+            //This will change the colour of the text to red if the number of items is less than 3
             String productID = (String) table.getModel().getValueAt(row, 0);
             Product product = findProductByID(productID);
 
             if (product != null && product.getNoOfAvailableItems() < 3) {
                 c.setForeground(Color.RED); // Items less than 3
+                if (isSelected) {
+                    c.setForeground(table.getSelectionForeground()); // A macOS issue where due the highlight colour
+                    // being red and the text colour for items less than 3 being red as well and hence the text will not be visible therefore
+                    // I have set the text colour to the selection foreground colour which when selected will turn white
+                }
             } else {
                 if (isSelected) {
                     c.setForeground(table.getSelectionForeground());
@@ -380,6 +411,14 @@ public class GUI extends JFrame {
             return c;
         }
 
+
+        /**
+         * This method finds the product in the productList based on the product ID and returns the product object
+         * which will then be used to get product info
+         *
+         * @param productID of the product
+         * @return Product object
+         */
         private Product findProductByID(String productID) {
             for (Product p : productList) {
                 if (p.getProductID().equals(productID)) {
@@ -388,7 +427,6 @@ public class GUI extends JFrame {
             }
             return null;
         }
-
     }
 
     /**
@@ -421,7 +459,11 @@ public class GUI extends JFrame {
     }
 
     //When shopping cart button is clicked, view shopping cart in new window
-    private final class ShoppingCartListener implements ActionListener {
+
+    /**
+     * This method adds an event listener to the shopping cart button
+     */
+    private class ShoppingCartListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("Shopping cart button clicked");
@@ -439,8 +481,19 @@ public class GUI extends JFrame {
             System.out.println("Add to cart button clicked");
             System.out.println("Selected product: " + product);
             ShoppingCart cart = ShoppingCart.getInstance();
-            cart.addToCart(product);
+            if (product.getNoOfAvailableItems() > 0) {
+                cart.addToCart(product);
+                viewProductInfo(product.getProductID());
+                if (product.getNoOfAvailableItems() == 0) {
+                    productList.remove(product);
+                    createTable(type);
+                    product = null;
+                    productListingPanel.removeAll();
+                    productListingPanel.revalidate();
+                    productListingPanel.repaint();
+                }
 
+            }
         }
     }
 }
