@@ -30,13 +30,13 @@ public class ShoppingCart {
 
 
     public void addToCart(Product p) {
-        //TODO: Check if there are available number of products in the productList and then add them
-        //to the cart and minus the number of products from the productList
         products.add(p);
+        p.setNoOfAvailableItems(p.getNoOfAvailableItems() - 1);
     }
 
     public void removeFromCart(Product p) {
         products.remove(p);
+        p.setNoOfAvailableItems(p.getNoOfAvailableItems() + 1);
     }
 
     public double calculateTotal() {
@@ -67,8 +67,17 @@ public class ShoppingCart {
 
         if (electronics.size() >= 3 || clothes.size() >= 3) {
             discount = calculateTotal() * 0.2;
-            System.out.println("You have 3 or more products of the same type in your cart");
+            //System.out.println("You have 3 or more products of the same type in your cart");
 
+        }
+        return 0 - discount;
+    }
+
+    public double firstUserDiscount() {
+        double discount = 0.0;
+        if (products.size() >= 3) {
+            discount = calculateTotal() * 0.1;
+            System.out.println("You have 3 or more products in your cart");
         }
         return 0 - discount;
     }
