@@ -68,6 +68,6 @@ public class Electronics extends Product implements Serializable {
 
     @Override
     public String getInfo() {
-        return "Brand: " + brand + "\nWarranty Period: " + warrantyPeriod;
+        return brand + ", " + warrantyPeriod;
     }
 }

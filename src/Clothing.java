@@ -34,7 +34,7 @@ public class Clothing extends Product implements Serializable {
 
     @Override
     public String getInfo() {
-        return "Size: " + size + "\nColor: " + colour;
+        return size + ", " + colour;
     }
 
     @Override
