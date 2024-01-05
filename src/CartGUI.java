@@ -20,8 +20,7 @@ public class CartGUI extends JFrame {
     private CartGUI() {
         setTitle("Shopping Cart");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setSize(600, 300);
-        //cartDetails();
+        setSize(600, 600);
         add(cartPanel);
     }
 
@@ -41,10 +40,7 @@ public class CartGUI extends JFrame {
     }
 
     public void cartDetails() {
-
         cartPanel.removeAll();
-
-        //cartPanel.setLayout(new BorderLayout());
         cartPanel.setBorder(new EmptyBorder(20, 15, 20, 10)); // Top, left, bottom, right margins
         //cartPanel.setLayout(new BoxLayout(cartPanel, BoxLayout.Y_AXIS));
 
@@ -65,8 +61,6 @@ public class CartGUI extends JFrame {
             productQuantities.put(key, productQuantities.getOrDefault(key, 0) + 1);
 
         }
-
-
         //System.out.println("No of products in cart: " + shoppingCart.getProducts().size());
         String[] columnNames = {"Product", "Quantity", "Price"};
         String[][] data = new String[shoppingCart.getProducts().size()][3];
@@ -75,12 +69,16 @@ public class CartGUI extends JFrame {
         for (String productId : productQuantities.keySet()) {
             Product product = findProductById(shoppingCart.getProducts(), productId);
             assert product != null;
-            data[i][0] = product.getProductID() + "\n" + product.getProductName() + "\n" + product.getInfo();
-            data[i][1] = String.valueOf(productQuantities.get(productId));
-            data[i][2] = String.valueOf(df.format(product.getPrice() * productQuantities.get(productId)));
+            data[i][0] = "<html><center>" + product.getProductID() + "<br>" + product.getProductName() + "<br>" + product.getInfo() + "</center></html>";
+            data[i][1] = "<html><center>" + productQuantities.get(productId) + "</center></html>";
+            data[i][2] = "<html><center>" + df.format(product.getPrice() * productQuantities.get(productId)) + "</center></html>";
             i++;
         }
 
+//        data[i][0] = product.getProductID() + "\n" + product.getProductName() + "\n" + product.getInfo();
+//        data[i][1] = String.valueOf(productQuantities.get(productId));
+//        data[i][2] = String.valueOf(df.format(product.getPrice() * productQuantities.get(productId)));
+//        i++;
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
@@ -90,18 +88,23 @@ public class CartGUI extends JFrame {
         };
 
         cartTable.setModel(model);
+        cartTable.setRowHeight(60);
+        cartTable.getTableHeader().setPreferredSize(new Dimension(cartTable.getColumnModel().getTotalColumnWidth(), 60));
         cartTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         cartTable.setGridColor(Color.BLACK);
 
 
         JScrollPane productsInCart = new JScrollPane(cartTable);
-        productsInCart.setPreferredSize(new Dimension(500, 100));
+        productsInCart.setPreferredSize(new Dimension(500, 180));
 
 
         updatePricePanel();
 
-        cartPanel.add(productsInCart, BorderLayout.NORTH);
-        cartPanel.add(pricePanel, BorderLayout.CENTER);
+        JPanel placePanel = new JPanel(new FlowLayout());
+
+        cartPanel.add(productsInCart);
+        cartPanel.add(placePanel);
+        cartPanel.add(pricePanel);
 
         cartPanel.revalidate();
         cartPanel.repaint();
@@ -129,6 +132,7 @@ public class CartGUI extends JFrame {
         JPanel pricePanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JPanel pricePanel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JPanel pricePanel3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel pricePanel4 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         Dimension rigidAreaDimension = new Dimension(0, 10);
 
@@ -137,27 +141,37 @@ public class CartGUI extends JFrame {
         JLabel label2 = new JLabel(String.valueOf(df.format(sc.calculateTotal())), SwingConstants.RIGHT);
         JLabel label3 = new JLabel("Three Items in Same Category Discount (20%)", SwingConstants.RIGHT);
         JLabel label4 = new JLabel(String.valueOf(df.format(sc.checkSameType())), SwingConstants.RIGHT);
-        JLabel label5 = new JLabel("Final Total", SwingConstants.RIGHT);
-        JLabel label6 = new JLabel(String.valueOf(df.format(sc.calculateTotal() - sc.checkSameType())), SwingConstants.RIGHT);
+        JLabel label5 = new JLabel("First Time User (10%)", SwingConstants.RIGHT);
+        JLabel label6 = new JLabel("0", SwingConstants.RIGHT);
+        JLabel label7 = new JLabel("Final Total", SwingConstants.RIGHT);
+        JLabel label8 = new JLabel(String.valueOf(df.format(sc.calculateTotal() + sc.checkSameType())), SwingConstants.RIGHT);
 
-        label5.setFont(new Font(label5.getFont().getName(), Font.BOLD, label5.getFont().getSize()));
-        label6.setFont(new Font(label6.getFont().getName(), Font.BOLD, label6.getFont().getSize()));
+        label5.setFont(new Font(label7.getFont().getName(), Font.BOLD, label5.getFont().getSize()));
+        label6.setFont(new Font(label8.getFont().getName(), Font.BOLD, label6.getFont().getSize()));
         // Add labels to the panel
         pricePanel1.add(label1);
-        pricePanel1.add(Box.createHorizontalStrut(20));
+        pricePanel1.add(Box.createHorizontalStrut(30));
         pricePanel1.add(label2);
+
         pricePanel2.add(label3);
-        pricePanel2.add(Box.createHorizontalStrut(20));
+        pricePanel2.add(Box.createHorizontalStrut(30));
         pricePanel2.add(label4);
+
         pricePanel3.add(label5);
-        pricePanel3.add(Box.createHorizontalStrut(20));
+        pricePanel3.add(Box.createHorizontalStrut(30));
         pricePanel3.add(label6);
+
+        pricePanel4.add(label7);
+        pricePanel4.add(Box.createHorizontalStrut(30));
+        pricePanel4.add(label8);
 
         pricePanel.add(pricePanel1);
         pricePanel.add(Box.createRigidArea(rigidAreaDimension));
         pricePanel.add(pricePanel2);
         pricePanel.add(Box.createRigidArea(rigidAreaDimension));
         pricePanel.add(pricePanel3);
+        pricePanel.add(Box.createRigidArea(rigidAreaDimension));
+        pricePanel.add(pricePanel4);
 
     }
 }
