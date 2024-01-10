@@ -220,7 +220,13 @@ public class GUI extends JFrame {
         JButton addToCartButton = new JButton("Add to Shopping Cart");
         addToCartButton.addActionListener(new AddToCartListener());
 
-
+        //addToCartButton.setEnabled(product == null || product.getNoOfAvailableItems() != 0);
+        if (product != null && product.getNoOfAvailableItems() == 0) {
+            addToCartButton.setEnabled(false);
+            itemsAvailableLabel.setText("Items Available: Out of Stock");
+        } else {
+            addToCartButton.setEnabled(true);
+        }
         addToCartPanel.add(addToCartButton);
         productListingPanel.add(productInfoPanel);
         productListingPanel.add(addToCartPanel);
@@ -484,14 +490,14 @@ public class GUI extends JFrame {
             if (product.getNoOfAvailableItems() > 0) {
                 cart.addToCart(product);
                 viewProductInfo(product.getProductID());
-                if (product.getNoOfAvailableItems() == 0) {
-                    productList.remove(product);
-                    createTable(type);
-                    product = null;
-                    productListingPanel.removeAll();
-                    productListingPanel.revalidate();
-                    productListingPanel.repaint();
-                }
+//                if (product.getNoOfAvailableItems() == 0) {
+//                    productList.remove(product);
+//                    createTable(type);
+//                    product = null;
+//                    productListingPanel.removeAll();
+//                    productListingPanel.revalidate();
+//                    productListingPanel.repaint();
+//                }
 
             }
         }
