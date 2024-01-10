@@ -261,7 +261,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
 //                GUI2 gui = new GUI2();
 //                gui.mainFrame();
                 System.out.println("Instance of WSM is " + instance);
-                GUI gui = GUI.getInstance();
+                GUI.getInstance();
                 break;
             case "7":
                 System.exit(0);
