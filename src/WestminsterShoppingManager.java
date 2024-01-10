@@ -20,7 +20,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     public void addProduct() {
         Scanner input = new Scanner(System.in);
         String productID;
-        DateTime dt = new DateTime();
         int warrantyPeriod;
         String brand;
 
@@ -262,7 +261,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
 //                GUI2 gui = new GUI2();
 //                gui.mainFrame();
                 System.out.println("Instance of WSM is " + instance);
-                GUI2 gui = GUI2.getInstance();
+                GUI.getInstance();
                 break;
             case "7":
                 System.exit(0);

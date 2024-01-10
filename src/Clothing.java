@@ -1,19 +1,19 @@
+import java.io.Serial;
 import java.io.Serializable;
 
 public class Clothing extends Product implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -5434306555668546251L;
     private String size;
-    private String color;
+    private String colour;
 
-    public Clothing(String productID, String productName) {
-        super(productID, productName);
-    }
 
     public Clothing(String productID, String productName, int noOfAvailableItems, double price,
                     String size, String color) {
         super(productID, productName, noOfAvailableItems, price);
         this.size = size;
-        this.color = color;
+        this.colour = color;
     }
 
     public String getSize() {
@@ -24,12 +24,17 @@ public class Clothing extends Product implements Serializable {
         this.size = size;
     }
 
-    public String getColor() {
-        return color;
+    public String getColour() {
+        return colour;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    @Override
+    public String getInfo() {
+        return size + ", " + colour;
     }
 
     @Override
@@ -37,6 +42,6 @@ public class Clothing extends Product implements Serializable {
         return "Type: Clothing \n" +
                 super.toString() +
                 "\nSize: '" + size +
-                ", \nColor: '" + color;
+                ", \nColor: '" + colour;
     }
 }

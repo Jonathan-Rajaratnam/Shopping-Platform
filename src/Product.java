@@ -1,8 +1,12 @@
+import java.io.Serial;
 import java.io.Serializable;
 
-public abstract class Product implements Serializable {
+public abstract class Product implements Serializable, Comparable<Product> {
 
-    private String productID = "Generic";
+    @Serial
+    private static final long serialVersionUID = -8404540139549563256L;
+
+    private String productID;
     private String productName;
     private int noOfAvailableItems;
     private double price;
@@ -50,6 +54,10 @@ public abstract class Product implements Serializable {
         this.price = price;
     }
 
+    public String getInfo() {
+        return "Generic Product";
+    }
+
     @Override
     public String toString() {
         return "Product ID: " + productID +
@@ -57,5 +65,26 @@ public abstract class Product implements Serializable {
                 "\nNo of Available Items: " + noOfAvailableItems +
                 "\nPrice: " + price;
     }
+
+
+    /**
+     * This method compares the productID of two products and returns the difference between them.
+     * If the productID is not a number, it will compare the productID as a string.
+     *
+     * @param o The product to be compared
+     * @return The difference between the productIDs
+     */
+    @Override
+    public int compareTo(Product o) {
+        try {
+            int productID1Int = Integer.parseInt(this.productID);
+            int productID2Int = Integer.parseInt(o.productID);
+            return productID1Int - productID2Int;
+
+        } catch (NumberFormatException e) {
+            return this.productID.compareTo(o.productID);
+        }
+    }
+
 
 }
